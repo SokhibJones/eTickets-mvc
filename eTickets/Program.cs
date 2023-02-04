@@ -32,4 +32,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Seeding the database with dummy data if no data exists
+await ApplicationDbInitializer.SeedAsync(app);
+
 app.Run();

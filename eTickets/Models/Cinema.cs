@@ -8,6 +8,6 @@
         public string Description { get; set; }
 
         // Relationships
-        public List<Movie> Movies { get; set; }
+        public virtual List<Movie> Movies { get; set; }
     }
 }

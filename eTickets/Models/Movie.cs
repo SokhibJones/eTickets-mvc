@@ -13,16 +13,16 @@
         // Relationships
         // MovieCategory relationship
         public int MovieCategoryId { get; set; }
-        public MovieCategory MovieCategory { get; set; }
+        public virtual MovieCategory MovieCategory { get; set; }
         
         // Cinema relationship
         public int CinemaId { get; set; }
-        public Cinema Cinema { get; set; }
+        public virtual Cinema Cinema { get; set; }
         
         // Producer relationship
         public int ProducerId { get; set; }
-        public Producer Producer { get; set; }
+        public virtual Producer Producer { get; set; }
 
-        public List<ActorMovie> ActorMovies { get; set; }
+        public virtual List<ActorMovie> ActorMovies { get; set; }
     }
 }

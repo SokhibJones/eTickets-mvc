@@ -7,14 +7,19 @@ namespace eTickets.Models
     {
         public int Id { get; set; }
 
+        [Required]
         [Display(Name = "Profile Picture")]
         public string ProfilePictureUrl { get; set; }
 
+        [Required]
+        [StringLength(50, MinimumLength = 3)]
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
+
+        [Required]
         public string Bio { get; set; }
 
         // Relationships
-        public virtual List<Movie> Movies { get; set; }
+        //public virtual List<Movie> Movies { get; set; }
     }
 }

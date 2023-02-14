@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 
 namespace eTickets.Data.Base
 {
@@ -34,6 +35,11 @@ namespace eTickets.Data.Base
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await dbContext.Set<T>().ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await dbContext.Set<T>().Where(predicate).ToListAsync();
         }
 
         public async Task<T?> GetByIdAsync(int id)

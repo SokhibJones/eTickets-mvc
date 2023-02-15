@@ -67,12 +67,11 @@
                     <div class="card-footer ">
                         <p class="card-text">
                             <a class="btn btn-outline-primary float-right" asp-action="Index"> Back to List</a>
-                            <a class="btn btn-success text-white"><i class="bi bi-cart-plus"></i> Add to Cart ($@Model.Price)</a>
+                        <a class="btn btn-success text-white" asp-controller="Orders" asp-action="AddToCartFromHome" asp-route-id="@Model.Id"><i class="bi bi-cart-plus"></i> Add to Cart ($@Model.Price)</a>
                         </p>
                     </div>
                 </div>
-            </div>
-        
+            </div>        
     </div>
 
 </div>

@@ -1,4 +1,5 @@
-﻿using eTickets.Models;
+﻿using eTickets.Data.Statics;
+using eTickets.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace eTickets.Data.Services
@@ -11,9 +12,15 @@ namespace eTickets.Data.Services
         {
             this.dbContext = dbContext;
         }
-        public async Task<List<Order>> GetUserOrdersAsync(string userId)
+        public async Task<List<Order>> GetUserOrdersByIdAndRoleAsync(string userId, string userRole)
         {
-            return await dbContext.Orders.Where(o => o.UserId == userId).ToListAsync();
+            var orders = await dbContext.Orders.ToListAsync();
+            if (userRole != UserRole.Admin)
+            {
+                return orders.Where(o => o.UserId == userId).ToList();
+            }
+
+            return orders;
         }
 
         public async Task StoreOrderAsync(List<ShoppingCartItem> shoppingCartItems, string userId, string userEmail)

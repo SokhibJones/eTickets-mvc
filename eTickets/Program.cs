@@ -2,6 +2,9 @@ using eTickets.Data;
 using eTickets.Data.Cart;
 using eTickets.Data.Services;
 using eTickets.Data.Stripe;
+using eTickets.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 
@@ -25,10 +28,17 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));
 
+// Identity configuration
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddMemoryCache();
+builder.Services.AddSession();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+});
+
 // Configuring Stripe settings
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
-
-builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -48,9 +58,10 @@ app.UseRouting();
 string key = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 StripeConfiguration.ApiKey = key;
 
-app.UseAuthorization();
-
 app.UseSession();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
@@ -58,5 +69,6 @@ app.MapControllerRoute(
 
 // Seeding the database with dummy data if no data exists
 await ApplicationDbInitializer.SeedAsync(app);
+await ApplicationDbInitializer.SeedUsersAndRolesAsync(app);
 
 app.Run();

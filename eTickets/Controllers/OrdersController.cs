@@ -1,11 +1,14 @@
 ﻿using eTickets.Data.Cart;
 using eTickets.Data.Services;
 using eTickets.Data.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
+using System.Security.Claims;
 
 namespace eTickets.Controllers
 {
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly IMovieService movieService;
@@ -21,8 +24,9 @@ namespace eTickets.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string userId = string.Empty;
-            var orders = await orderService.GetUserOrdersAsync(userId);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userRole = User.FindFirstValue(ClaimTypes.Role);
+            var orders = await orderService.GetUserOrdersByIdAndRoleAsync(userId, userRole);
             
             return View(orders);
         }
@@ -78,8 +82,8 @@ namespace eTickets.Controllers
         public async Task<IActionResult> CompleteOrderAsync()
         {
             var items = shoppingCart.GetShoppingCartItems();
-            string userId = string.Empty;
-            string userEmail = string.Empty;
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userEmail = User.FindFirstValue(ClaimTypes.Email);
 
             await orderService.StoreOrderAsync(items, userId, userEmail);
 

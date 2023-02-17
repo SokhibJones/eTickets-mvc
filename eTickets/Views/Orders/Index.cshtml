@@ -8,13 +8,16 @@
         <p>
             <h4>List of all your orders</h4>
         </p>
-        <table class="table">
+        <table class="table text-center">
             <thead>
                 <tr>
                     <th>Order ID</th>
                     <th>Items</th>
                     <th>Total</th>
-                    <th>User</th>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <th>User</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -37,9 +40,13 @@
                         <td class="align-middle">
                             @order.OrderItems.Sum(i => i.Movie.Price * i.Amount).ToString("C")
                         </td>
-                        <td class="align-middle">
-                            @order.UserId
-                        </td>
+
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <td class="align-middle">
+                                @order.User.FullName
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>

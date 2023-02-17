@@ -18,8 +18,5 @@ namespace eTickets.Models
 
         [Required]
         public string Description { get; set; } = string.Empty;
-
-        // Relationships
-        //public virtual List<Movie> Movies { get; set; }
     }
 }

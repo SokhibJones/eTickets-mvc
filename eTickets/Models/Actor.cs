@@ -17,9 +17,6 @@ namespace eTickets.Models
         public string FullName { get; set; }
 
         [Required]
-        public string Bio { get; set; }
-
-        // RelationShips
-        //public virtual List<ActorMovie> ActorMovies { get; set; }
+        public string Bio { get; set; } = string.Empty;
     }
 }

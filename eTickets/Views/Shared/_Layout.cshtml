@@ -11,6 +11,9 @@
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/eTickets.styles.css" asp-append-version="true" />
+
+    @*Toastr notification popups*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 </head>
 <body>
     <header>
@@ -26,17 +29,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Movies" asp-action="Index"> <i class="bi bi-film"></i> Movies</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-gear"></i> Management
-                            </a>
 
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-controller="Cinemas" asp-action="Index"> <i class="bi bi-camera-reels"></i> Cinemas</a>
-                                <a class="dropdown-item" asp-controller="Producers" asp-action="Index"> <i class="bi bi-headset"></i> Producers</a>
-                                <a class="dropdown-item" asp-controller="Actors" asp-action="Index"> <i class="bi bi-person-square"></i> Actors</a>
-                            </div>
-                        </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> Management
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-controller="Cinemas" asp-action="Index"> <i class="bi bi-camera-reels"></i> Cinemas</a>
+                                    <a class="dropdown-item" asp-controller="Producers" asp-action="Index"> <i class="bi bi-headset"></i> Producers</a>
+                                    <a class="dropdown-item" asp-controller="Actors" asp-action="Index"> <i class="bi bi-person-square"></i> Actors</a>
+                                </div>
+                            </li>
+                        }
+                        
                     </ul>
 
                     <form class="form-inline my-2 my-lg-0" style="padding-right: 25px;" asp-controller="Movies" asp-action="Search" style="padding-right: 25px;">
@@ -48,19 +56,7 @@
                         @await Component.InvokeAsync("ShoppingCartSummary")
                     </ul>
 
-                    @*User Profile Section*@
-                    <div class="dropdown">
-                        <button class="btn btn-outline-success dropdown-toggle" type="button" id="profile-btn" data-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-badge"></i> Hello User
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="profile-btn">
-                            <li>
-                                <a class="dropdown-item" asp-controller="Orders" asp-action="Index">
-                                    <i class="bi bi-list"></i> Orders
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <partial name="_Identity"/>
 
                 </div>
             </div>
@@ -80,11 +76,14 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    @*Toastr notification popup js cdn*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
     
     @await RenderSectionAsync("Scripts", required: false)

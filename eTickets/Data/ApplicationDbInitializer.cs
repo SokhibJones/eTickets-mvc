@@ -1,4 +1,6 @@
-﻿using eTickets.Models;
+﻿using eTickets.Data.Statics;
+using eTickets.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace eTickets.Data
 {
@@ -383,6 +385,59 @@ namespace eTickets.Data
                     });
 
                     await context.SaveChangesAsync();
+                }
+            }
+        }
+        public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+        {
+            using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+            {
+                var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                // Roles
+                if (!await roleManager.RoleExistsAsync(UserRole.Admin))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(UserRole.Admin));
+                }
+
+                if (!await roleManager.RoleExistsAsync(UserRole.User))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(UserRole.User));
+                }
+
+                // Users
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+                string adminEmail = "admin@etickets.com";
+                var adminUser = await userManager.FindByEmailAsync(adminEmail);
+                if (adminUser is null)
+                {
+                    adminUser = new ApplicationUser
+                    {
+                        FullName = "Admin User",
+                        UserName = "admin-user",
+                        Email = adminEmail,
+                        EmailConfirmed = true
+                    };
+
+                    await userManager.CreateAsync(adminUser, "Pass123!");
+                    await userManager.AddToRoleAsync(adminUser, UserRole.Admin);
+                }
+
+                string userEmail = "user@etickets.com";
+                var appUser = await userManager.FindByEmailAsync(userEmail);
+                if (appUser is null)
+                {
+                    appUser = new ApplicationUser
+                    {
+                        FullName = "Application User",
+                        UserName = "app-user",
+                        Email = userEmail,
+                        EmailConfirmed = true
+                    };
+
+                    await userManager.CreateAsync(appUser, "Pass123!");
+                    await userManager.AddToRoleAsync(appUser, UserRole.User);
                 }
             }
         }
